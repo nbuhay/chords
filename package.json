@@ -1,0 +1,10 @@
+{
+	"name": "chords",
+	"version": "0.0.1",
+	"description": "learning chords made easy",
+	"main": "test.js",
+
+	"dependencies": {
+		"mime": "~1.2.7"
+	}
+}
