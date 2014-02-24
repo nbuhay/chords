@@ -8,3 +8,7 @@ module.exports = new EventEmitter();
 module.exports.on('err', function(err) {
 	console.log('Generic Error: ' + err);
 });
+
+module.exports.on('404', function(err) {
+	console.log('404 Error: ' + err);
+})

@@ -4,56 +4,78 @@ var path = require('path');  // Provides fs path type funct
 var mime = require('mime');  // provides ability to derive MIME types based on file ext
 var cache = {};              // Object where contents of cached files are stored.
 var port = 2943;
-
-
-var events = require('events').EventEmitter; // Provides access to event emitter library functionality
-// Exports common event listener
-module.exports = new events();
-
-
+var error = require('./controllers/errorController.js');
 // Import functions from example.js, notably async
 var async = require('./js/example.js');
 var maj = require('./controllers/majChordController.js');
+var indexPath = './index.html';
+var notFoundPath = './404.html';
 
-function serveStatic (response, cache, absPath) {
-	// If the path for file to be sent already was in cache, use that path
-	if (cache[absPath]) {
-		sendFile(response, absPath, cache[absPath]);
-	// Otherwise must do a lot of work
-	} else {
-		// Use fs functionality to check if the path arg exists
-		fs.exists(absPath, function(exists) {
-			// use the results of the fs.exists (stored in param exists) to do logic
-			if(exists) {
-				// it exists and must be read in
-				fs.readFile(absPath, function(err, data) {
-					// should be noted the callback param data is the data read from path
-					if(err) {
-						send404(response);
-					} else {
-						// no error, store path as array index and data
-						cache[absPath] = data;
-						sendFile(response, absPath, data);
-					}
-				});
-			} else {
-				send404(response);
-			}
-		});
-	}
+// function serveStatic (response, cache, absPath) {
+// 	// If the path for file to be sent already was in cache, use that path
+// 	if (cache[absPath]) {
+// 		sendFile(response, absPath, cache[absPath]);
+// 	// Otherwise must do a lot of work
+// 	} else {
+// 		// Use fs functionality to check if the path arg exists
+// 		fs.exists(absPath, function(exists) {
+// 			// use the results of the fs.exists (stored in param exists) to do logic
+// 			if(exists) {
+// 				// it exists and must be read in
+// 				fs.readFile(absPath, function(err, data) {
+// 					// should be noted the callback param data is the data read from path
+// 					if(err) {
+// 						send404(response);
+// 					} else {
+// 						// no error, store path as array index and data
+// 						cache[absPath] = data;
+// 						sendFile(response, absPath, data);
+// 					}
+// 				});
+// 			} else {
+// 				send404(response);
+// 			}
+// 		});
+// 	}
+// }
+
+function serveStatic(url, res) {
+	fs.exists(url, function(exists) {
+		if(exists) {
+			fs.readFile(url, function(err, html) {
+				if(err) {
+					error.emit('err', err);
+					res.end();
+				} else {
+					res.writeHead(200, {'Content-Type': 'text/html'});
+					res.end(html);
+				}
+			});
+		} else {
+			fs.readFile(notFoundPath, function(err, html) {
+				if(err) {
+					error.emit('err', err);
+					res.end();
+				} else {
+					error.emit('404', err);
+					res.writeHead(404, {'Content-Type': 'text/html'});
+					res.end(html);
+				}
+			});
+		}
+	});
 }
 
-var server2 = http.createServer(function (req, res) {
-	if(req.url == '/a_maj') {
+var server = http.createServer(function (req, res) {
+	if(req.url == '/') {
+		serveStatic(indexPath, res);
+	} else if(req.url == '/a_maj') {
 		if(maj.lookup('a')) {
 			res.writeHead(200, {'Content-Type': 'text/html'});
-			res.end();
 		} else {
 			res.writeHead(500, {'Content-Type': 'text/html'});
-			res.end();
 		}
-	} else if(req.url == '/') {
-		console.log('Hello');
+		res.end();
 	} else if(req.url == '/d_min') {
 		fs.readFile('./chord_list.json', function(err, data) {
 			if(err) throw err;
@@ -74,25 +96,3 @@ var server2 = http.createServer(function (req, res) {
 		function() { console.log("Success")}
 	);
 });
-
-// Generic error handler for servers
-module.exports.on('err', function(err) {
-	console.log('ERROR: ' + err);
-});
-
-var server1 = http.createServer(function (request, response) {
-	var filePath = false;
-
-	if(request.url == '/') {
-		filePath = 'public/index.html'
-	} else {
-		filePath = 'public' + request.url;
-	}
-
-	var absPath = './' + filePath;
-	serveStatic(response, cache, absPath);
-});
-
-server1.listen(port+1, function() {
-	console.log("Server1 listening on " + (port+1) + ".");
-})
