@@ -4,6 +4,11 @@ var path = require('path');  // Provides fs path type funct
 var mime = require('mime');  // provides ability to derive MIME types based on file ext
 var cache = {};              // Object where contents of cached files are stored.
 var port = 2943;
+var events = require('events'); // Provides access to event emitter library functionality
+var eventHandler = new events.EventEmitter();
+// Import functions from example.js, notably async
+var async = require('./js/example.js');
+var maj = require('./controllers/majChordController.js');
 
 function serveStatic (response, cache, absPath) {
 	// If the path for file to be sent already was in cache, use that path
@@ -35,23 +40,13 @@ function serveStatic (response, cache, absPath) {
 
 var server2 = http.createServer(function (req, res) {
 	if(req.url == '/a_maj') {
-		// fs.rename('dummy.txt', 'smart.txt', function(err, data) {
-		// 	if(err) {
-		// 		console.log(err);
-		// 	} else {
-		// 		console.log('Success!' + data);
-		// 	}
-		// });
-
-		fs.readFile('./chord_list.json', function(err, data) {
-			if(err) throw err;
-			var notes = JSON.parse(data.toString());
-			console.log(notes.maj.a);
-			console.log(notes);
-
+		if(maj.lookup('a')) {
 			res.writeHead(200, {'Content-Type': 'text/html'});
 			res.end();
-		});
+		} else {
+			res.writeHead(500, {'Content-Type': 'text/html'});
+			res.end();
+		}
 	} else if(req.url == '/') {
 		console.log('Hello');
 	} else if(req.url == '/d_min') {
@@ -67,6 +62,17 @@ var server2 = http.createServer(function (req, res) {
 	}
 }).listen(1200, function() {
 	console.log('Listening on port 1200');
+	// Imported functions from async object called using dot notation
+	// Parameters are functions to be executed
+	async.asyncFunction(
+		function() { console.log("Fail")},
+		function() { console.log("Success")}
+	);
+});
+
+// Generic error handler for servers
+eventHandler.on('err', function(err) {
+	console.log('ERROR: ' + err);
 });
 
 var server1 = http.createServer(function (request, response) {
@@ -85,20 +91,3 @@ var server1 = http.createServer(function (request, response) {
 server1.listen(port+1, function() {
 	console.log("Server1 listening on " + (port+1) + ".");
 })
-
-var server = http.createServer(function(request, response) {
-	var filePath = false;
-
-	if(request.url == '/') {
-		filePath = 'public/index.html';
-	} else {
-		filePath = 'public' + request.url;
-	}
-
-	var absPath = './' + filePath;
-	serveStatic(response, cache, absPath);
-});
-
-server.listen(port, function() {
-	console.log("Server listening on " + port + ".");
-});
