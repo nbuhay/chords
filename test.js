@@ -4,8 +4,13 @@ var path = require('path');  // Provides fs path type funct
 var mime = require('mime');  // provides ability to derive MIME types based on file ext
 var cache = {};              // Object where contents of cached files are stored.
 var port = 2943;
-var events = require('events'); // Provides access to event emitter library functionality
-var eventHandler = new events.EventEmitter();
+
+
+var events = require('events').EventEmitter; // Provides access to event emitter library functionality
+// Exports common event listener
+module.exports = new events();
+
+
 // Import functions from example.js, notably async
 var async = require('./js/example.js');
 var maj = require('./controllers/majChordController.js');
@@ -71,7 +76,7 @@ var server2 = http.createServer(function (req, res) {
 });
 
 // Generic error handler for servers
-eventHandler.on('err', function(err) {
+module.exports.on('err', function(err) {
 	console.log('ERROR: ' + err);
 });
 
