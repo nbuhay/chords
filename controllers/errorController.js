@@ -11,4 +11,8 @@ module.exports.on('err', function(err) {
 
 module.exports.on('404', function(err) {
 	console.log('404 Error: ' + err);
-})
+});	
+
+module.exports.on('chord404', function(chord, quality) {
+	console.log('Error: Chord ' + chord + ' of quality ' + quality + ' not found.');
+});

@@ -3,13 +3,11 @@ var fs = require('fs');      // Provides access to file system related funct
 var path = require('path');  // Provides fs path type funct
 var mime = require('mime');  // provides ability to derive MIME types based on file ext
 var cache = {};              // Object where contents of cached files are stored.
-var port = 2943;
+var maj = require('./controllers/chordController.js');
 var error = require('./controllers/errorController.js');
-// Import functions from example.js, notably async
-var async = require('./js/example.js');
-var maj = require('./controllers/majChordController.js');
-var indexPath = './index.html';
+var indexPath = './indx.html';
 var notFoundPath = './404.html';
+var port = 1200;
 
 // function serveStatic (response, cache, absPath) {
 // 	// If the path for file to be sent already was in cache, use that path
@@ -70,29 +68,31 @@ var server = http.createServer(function (req, res) {
 	if(req.url == '/') {
 		serveStatic(indexPath, res);
 	} else if(req.url == '/a_maj') {
-		if(maj.lookup('a')) {
+		if(maj.lookup('a', 'maj')) {
 			res.writeHead(200, {'Content-Type': 'text/html'});
 		} else {
 			res.writeHead(500, {'Content-Type': 'text/html'});
 		}
 		res.end();
 	} else if(req.url == '/d_min') {
-		fs.readFile('./chord_list.json', function(err, data) {
-			if(err) throw err;
-			var notes = JSON.parse(data.toString());
-			console.log(notes.min.d);
-			console.log(notes);
-
+		if(maj.lookup('d', 'min')) {
 			res.writeHead(200, {'Content-Type': 'text/html'});
-			res.end();
-		})
+		} else {
+			res.writeHead(500, {'Content-Type': 'text/html'});
+		}
+		res.end();
+	} else {
+		fs.readFile(notFoundPath, function(err, html) {
+			if(err) {
+				error.emit('err', err);
+				res.end();
+			} else {
+				error.emit('404', err);
+				res.writeHead(404, {'Content-Type': 'text/html'});
+				res.end(html);
+			}
+		});
 	}
-}).listen(1200, function() {
-	console.log('Listening on port 1200');
-	// Imported functions from async object called using dot notation
-	// Parameters are functions to be executed
-	async.asyncFunction(
-		function() { console.log("Fail")},
-		function() { console.log("Success")}
-	);
+}).listen(port, function() {
+	console.log('Listening on port ' + port +'...');
 });
