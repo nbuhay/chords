@@ -5,9 +5,10 @@ var mime = require('mime');  // provides ability to derive MIME types based on f
 var cache = {};              // Object where contents of cached files are stored.
 var maj = require('./controllers/chordController.js');
 var error = require('./controllers/errorController.js');
-var indexPath = './indx.html';
+var indexPath = './index.html';
 var notFoundPath = './404.html';
 var port = 1200;
+var weight = 3;
 
 // function serveStatic (response, cache, absPath) {
 // 	// If the path for file to be sent already was in cache, use that path
@@ -94,5 +95,11 @@ var server = http.createServer(function (req, res) {
 		});
 	}
 }).listen(port, function() {
-	console.log('Listening on port ' + port +'...');
+	console.log('Listening on port ' + port + '...');
 });
+
+// Not yet working
+// for(var i = 0; i < weight; i++) {
+// 	server.listen(port+i);
+// 	console.log('Listening on port ' + (port+i) +'...');
+// }

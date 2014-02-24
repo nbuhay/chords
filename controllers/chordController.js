@@ -11,7 +11,8 @@ exports.lookup = function (chord, quality) {
 			var chords = JSON.parse(data.toString());
 			for(index in chords[quality]) {
 				if(index == chord) {
-					console.log(chords.maj[index]);
+					// Return something here
+					console.log(chords[quality][index]);
 					return true;
 				}
 			}
