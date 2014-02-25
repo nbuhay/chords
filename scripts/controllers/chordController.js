@@ -3,7 +3,7 @@ var fs = require('fs');
 
 // find notes of chord of certain quality i.e. maj or min
 exports.lookup = function (chord, quality) {
-	fs.readFile('./chord_list.json', function(err, data) {
+	fs.readFile('../../chord_list.json', function(err, data) {
 		if(err) {
 			error.emit('err', err);
 			return false;

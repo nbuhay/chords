@@ -2,11 +2,16 @@ var http = require('http');  // Provides HTTP server and client functinality
 var fs = require('fs');      // Provides access to file system related funct
 var path = require('path');  // Provides fs path type funct
 var mime = require('mime');  // provides ability to derive MIME types based on file ext
+
+// Express creates its own independent instance of http.createServer, neat!
+var express = require('express');
+var app = express();
+
 var cache = {};              // Object where contents of cached files are stored.
-var maj = require('./controllers/chordController.js');
-var error = require('./controllers/errorController.js');
-var indexPath = './index.html';
-var notFoundPath = './404.html';
+var chord = require('./scripts/controllers/chordController.js');
+var error = require('./scripts/controllers/errorController.js');
+var indexPath = './public/index.html';
+var notFoundPath = './public/404.html';
 var port = 1200;
 var weight = 3;
 
@@ -44,56 +49,70 @@ function serveStatic(url, res) {
 			fs.readFile(url, function(err, html) {
 				if(err) {
 					error.emit('err', err);
-					res.end();
+					res.send(500, 'Somebody poisoned the water hole!');
 				} else {
-					res.writeHead(200, {'Content-Type': 'text/html'});
-					res.end(html);
+					res.send(html);
 				}
 			});
 		} else {
 			fs.readFile(notFoundPath, function(err, html) {
 				if(err) {
 					error.emit('err', err);
-					res.end();
+					res.send(500, 'Somebody poisoned the water hole!');
 				} else {
 					error.emit('404', err);
-					res.writeHead(404, {'Content-Type': 'text/html'});
-					res.end(html);
+					res.send(404, html);
+					// res.writeHead(404, {'Content-Type': 'text/html'});
+					// res.end(html);
 				}
 			});
 		}
 	});
 }
 
+app.use(express.static(__dirname + '/public'));
+
+app.use('/', express.static(__dirname + '/public'));
+
+// app.get('/', function(req, res) {
+// 		serveStatic(indexPath, res);
+// 	});
+
+app.listen(5000, function() {
+	console.log('Express app listening on port 5000...');
+});
+
 var server = http.createServer(function (req, res) {
-	if(req.url == '/') {
-		serveStatic(indexPath, res);
-	} else if(req.url == '/a_maj') {
-		if(maj.lookup('a', 'maj')) {
-			res.writeHead(200, {'Content-Type': 'text/html'});
-		} else {
-			res.writeHead(500, {'Content-Type': 'text/html'});
-		}
-		res.end();
-	} else if(req.url == '/d_min') {
-		if(maj.lookup('d', 'min')) {
-			res.writeHead(200, {'Content-Type': 'text/html'});
-		} else {
-			res.writeHead(500, {'Content-Type': 'text/html'});
-		}
-		res.end();
-	} else {
-		fs.readFile(notFoundPath, function(err, html) {
-			if(err) {
-				error.emit('err', err);
-				res.end();
-			} else {
-				error.emit('404', err);
-				res.writeHead(404, {'Content-Type': 'text/html'});
-				res.end(html);
-			}
-		});
-	}
+	
+	// if(req.url == '/') {
+	// 	serveStatic(indexPath, res);
+	// } else 
+	// if(req.url == '/a_maj') {
+	// 	if(chord.lookup('a', 'maj')) {
+	// 		res.writeHead(200, {'Content-Type': 'text/html'});
+	// 	} else {
+	// 		res.writeHead(500, {'Content-Type': 'text/html'});
+	// 	}
+	// 	res.end();
+	// } else if(req.url == '/d_min') {
+	// 	if(chord.lookup('d', 'min')) {
+	// 		res.writeHead(200, {'Content-Type': 'text/html'});
+	// 	} else {
+	// 		res.writeHead(500, {'Content-Type': 'text/html'});
+	// 	}
+	// 	res.end();
+	// } else {
+	// 	fs.readFile(notFoundPath, function(err, html) {
+	// 		if(err) {
+	// 			error.emit('err', err);
+	// 			res.end();
+	// 		} else {
+	// 			error.emit('404', err);
+	// 			res.writeHead(404, {'Content-Type': 'text/html'});
+	// 			res.end(html);
+	// 		}
+	// 	});
+	// }
 }).listen(port, function() {
 	console.log('Listening on port ' + port + '...');
 });
