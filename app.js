@@ -84,35 +84,35 @@ app.listen(5000, function() {
 
 var server = http.createServer(function (req, res) {
 	
-	// if(req.url == '/') {
-	// 	serveStatic(indexPath, res);
-	// } else 
-	// if(req.url == '/a_maj') {
-	// 	if(chord.lookup('a', 'maj')) {
-	// 		res.writeHead(200, {'Content-Type': 'text/html'});
-	// 	} else {
-	// 		res.writeHead(500, {'Content-Type': 'text/html'});
-	// 	}
-	// 	res.end();
-	// } else if(req.url == '/d_min') {
-	// 	if(chord.lookup('d', 'min')) {
-	// 		res.writeHead(200, {'Content-Type': 'text/html'});
-	// 	} else {
-	// 		res.writeHead(500, {'Content-Type': 'text/html'});
-	// 	}
-	// 	res.end();
-	// } else {
-	// 	fs.readFile(notFoundPath, function(err, html) {
-	// 		if(err) {
-	// 			error.emit('err', err);
-	// 			res.end();
-	// 		} else {
-	// 			error.emit('404', err);
-	// 			res.writeHead(404, {'Content-Type': 'text/html'});
-	// 			res.end(html);
-	// 		}
-	// 	});
-	// }
+	if(req.url == '/') {
+		serveStatic(indexPath, res);
+	} else 
+	if(req.url == '/a_maj') {
+		chord.lookup('a', 'maj');
+		res.setHeader('Chord', chord);
+		res.setHeader('Chord-Quality', quality);
+		res.writeHead(200, {'Content-Type': 'text/html'});
+	} else if(req.url =='/a_min') {
+		chord.lookup('a', 'min');
+	} else if(req.url == '/d_min') {
+		if(chord.lookup('d', 'min')) {
+			res.writeHead(200, {'Content-Type': 'text/html'});
+		} else {
+			res.writeHead(500, {'Content-Type': 'text/html'});
+		}
+		res.end();
+	} else {
+		fs.readFile(notFoundPath, function(err, html) {
+			if(err) {
+				error.emit('err', err);
+				res.end();
+			} else {
+				error.emit('404', err);
+				res.writeHead(404, {'Content-Type': 'text/html'});
+				res.end(html);
+			}
+		});
+	}
 }).listen(port, function() {
 	console.log('Listening on port ' + port + '...');
 });
