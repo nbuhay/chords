@@ -88,14 +88,10 @@ var server = http.createServer(function (req, res) {
 	if(req.url == '/') {
 		serveStatic(indexPath, res);
 	} else 
-	if(req.url == '/triad?chord=a&quality=maj') {
+	if(url.parse(req.url).pathname == '/triad') {
 		// when parsing pass true to parse the query as well
 		var triad = url.parse(req.url, true).query;
 		chord.lookup(triad.chord, triad.quality, res);
-	} else if(req.url =='/a_min') {
-		chord.lookup('a', 'min', res);
-	} else if(req.url == '/d_min') {
-		chord.lookup('d', 'min', res);
 	} else {
 		fs.readFile(notFoundPath, function(err, html) {
 			if(err) {
