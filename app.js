@@ -2,6 +2,7 @@ var http = require('http');  // Provides HTTP server and client functinality
 var fs = require('fs');      // Provides access to file system related funct
 var path = require('path');  // Provides fs path type funct
 var mime = require('mime');  // provides ability to derive MIME types based on file ext
+var url = require('url');
 
 // Express creates its own independent instance of http.createServer, neat!
 var express = require('express');
@@ -87,20 +88,14 @@ var server = http.createServer(function (req, res) {
 	if(req.url == '/') {
 		serveStatic(indexPath, res);
 	} else 
-	if(req.url == '/a_maj') {
-		chord.lookup('a', 'maj');
-		res.setHeader('Chord', chord);
-		res.setHeader('Chord-Quality', quality);
-		res.writeHead(200, {'Content-Type': 'text/html'});
+	if(req.url == '/triad?chord=a&quality=maj') {
+		// when parsing pass true to parse the query as well
+		var triad = url.parse(req.url, true).query;
+		chord.lookup(triad.chord, triad.quality, res);
 	} else if(req.url =='/a_min') {
-		chord.lookup('a', 'min');
+		chord.lookup('a', 'min', res);
 	} else if(req.url == '/d_min') {
-		if(chord.lookup('d', 'min')) {
-			res.writeHead(200, {'Content-Type': 'text/html'});
-		} else {
-			res.writeHead(500, {'Content-Type': 'text/html'});
-		}
-		res.end();
+		chord.lookup('d', 'min', res);
 	} else {
 		fs.readFile(notFoundPath, function(err, html) {
 			if(err) {
