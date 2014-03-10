@@ -107,9 +107,3 @@ var server = http.createServer(function (req, res) {
 }).listen(port, function() {
 	console.log('Listening on port ' + port + '...');
 });
-
-// Not yet working
-// for(var i = 0; i < weight; i++) {
-// 	server.listen(port+i);
-// 	console.log('Listening on port ' + (port+i) +'...');
-// }
