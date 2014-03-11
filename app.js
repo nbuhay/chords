@@ -94,7 +94,7 @@ var server = http.createServer(function (req, res) {
 		var triad = url.parse(req.url, true).query;
 		chord.lookup(triad.chord, triad.quality, res);
 	} else {
-		res.end(read.load(notFoundPath, res, 404));
+		read.load(notFoundPath, res, 404);
 	}
 
 }).listen(port, function() {

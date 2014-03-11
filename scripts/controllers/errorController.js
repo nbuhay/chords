@@ -16,7 +16,7 @@ module.exports.on('404', function(err) {
 });	
 
 module.exports.on('chord404', function(chord, quality, res) {
-	res.end(read.load(chord404, res, 404));
+	read.load(chord404, res, 404);
 	console.log('Error: Chord ' + chord + ' of quality ' + quality + ' not found.');
 });
 
