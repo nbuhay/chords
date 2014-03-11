@@ -3,6 +3,7 @@ var fs = require('fs');      // Provides access to file system related funct
 var path = require('path');  // Provides fs path type funct
 var mime = require('mime');  // provides ability to derive MIME types based on file ext
 var url = require('url');
+var root = __dirname;
 
 // Express creates its own independent instance of http.createServer, neat!
 var express = require('express');
@@ -11,6 +12,7 @@ var app = express();
 var cache = {};              // Object where contents of cached files are stored.
 var chord = require('./scripts/controllers/chordController.js');
 var error = require('./scripts/controllers/errorController.js');
+var read = require('./scripts/controllers/readController.js');
 var indexPath = './public/index.html';
 var notFoundPath = './public/404.html';
 var port = 1200;
@@ -87,23 +89,14 @@ var server = http.createServer(function (req, res) {
 	
 	if(req.url == '/') {
 		serveStatic(indexPath, res);
-	} else 
-	if(url.parse(req.url).pathname == '/triad') {
+	} else if(url.parse(req.url).pathname == '/triad') {
 		// when parsing pass true to parse the query as well
 		var triad = url.parse(req.url, true).query;
 		chord.lookup(triad.chord, triad.quality, res);
 	} else {
-		fs.readFile(notFoundPath, function(err, html) {
-			if(err) {
-				error.emit('err', err);
-				res.end();
-			} else {
-				error.emit('404', err);
-				res.writeHead(404, {'Content-Type': 'text/html'});
-				res.end(html);
-			}
-		});
+		res.end(read.load(notFoundPath, res, 404));
 	}
+
 }).listen(port, function() {
 	console.log('Listening on port ' + port + '...');
 });

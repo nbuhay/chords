@@ -23,7 +23,7 @@ exports.lookup = function (chord, quality, res) {
 					return;
 				}
 			}
-			error.emit('chord404', chord, quality);
+			error.emit('chord404', chord, quality, res);
 		}
 	});
 }
