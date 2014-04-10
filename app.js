@@ -93,6 +93,9 @@ var server = http.createServer(function (req, res) {
 		// when parsing pass true to parse the query as well
 		var triad = url.parse(req.url, true).query;
 		chord.lookup(triad.chord, triad.quality, res);
+	} else if(url.parse(req.url).pathname == '/scale') {
+		var scale = url.parse(req.url, true).query;
+		chord.scaleLookup(scale.type, scale.tonic, res);
 	} else {
 		read.load(notFoundPath, res, 404);
 	}

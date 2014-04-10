@@ -4,6 +4,7 @@ var error = require('./errorController.js');
 // will set up all static returns
 exports.load = function(url, res, statusCode) {
 	var stream = fs.createReadStream(url);
+	//stream.pipe(res);
 	stream.on('data', function(chunk) {
 		res.write(chunk);
 	});

@@ -27,3 +27,21 @@ exports.lookup = function (chord, quality, res) {
 		}
 	});
 }
+
+exports.scaleLookup = function (type, tonic, res) {
+	fs.readFile('./major_scale.json', function(err, data) {
+		if(err) {
+			error.emit('err', err);
+		} else {
+			var scale = JSON.parse(data.toString());
+			var body = 	'<h1>'+(scale[type][tonic][0].note)+' Major</h1>' +
+						'<p>'+scale[type][tonic][0].name+': '+scale[type][tonic][0].note+'</p><br>' +
+						'<p>'+scale[type][tonic][1].name+': '+scale[type][tonic][1].note+'</p><br>';
+			console.log(scale[type][tonic]);
+			res.setHeader('Content-Length', Buffer.byteLength(body));
+			res.writeHead(200, {'Content-Type': 'text/html'});
+			res.end(body);
+			return;
+		}
+	});
+}

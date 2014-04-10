@@ -1,0 +1,99 @@
+{
+	"regular": 
+	{
+		"a": 
+		[
+			{
+				"name": "tonic",
+				"note": "a"
+			},
+			{
+				"name": "supertonic",
+				"note": "b"
+			},
+			{
+				"mediant": "c",
+				"mod": "sharp"
+			},
+			{
+				"subdominant": "d"
+			},
+			{
+				"dominant": "e"
+			},
+			{
+				"submediant": "f",
+				"mod": "sharp"
+			},
+			{
+				"leadingTone": "g",
+				"mod": "sharp"
+			}
+		]
+	},
+	"sharp": 
+	{
+		"a": 
+		[
+			{
+				"tonic": "a",
+				"mod": "sharp"
+			},
+			{
+				"supertonic": "b",
+				"mod": "sharp"
+			},
+			{
+				"mediant": "c",
+				"mod": "doubleSharp"
+			},
+			{
+				"subdominant": "d",
+				"mod": "sharp"
+			},
+			{
+				"dominant": "e",
+				"mod": "sharp"
+			},
+			{
+				"submediant": "f",
+				"mod": "doubleSharp"
+			},
+			{
+				"leadingTone": "g",
+				"mod": "sharp"
+			}
+		]
+	},
+	"flat": 
+	{
+		"a": 
+		[
+			{
+				"tonic": "a",
+				"mod": "flat"
+			},
+			{
+				"supertonic": "b",
+				"mod": "flat"
+			},
+			{
+				"mediant": "c"
+			},
+			{
+				"subdominant": "d",
+				"mod": "flat"
+			},
+			{
+				"dominant": "e",
+				"mod": "flat"
+			},
+			{
+				"submediant": "f"
+			},
+			{
+				"leadingTone": "g"
+			}
+		]
+	}
+}
