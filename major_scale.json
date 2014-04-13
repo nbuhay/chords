@@ -1,5 +1,5 @@
 {
-	"regular": 
+	"natural": 
 	{
 		"a": 
 		[
@@ -12,22 +12,27 @@
 				"note": "b"
 			},
 			{
-				"mediant": "c",
-				"mod": "sharp"
+				"name": "mediant",
+				"note": "c",
+				"intonation": "sharp"
 			},
 			{
-				"subdominant": "d"
+				"name": "subdominant",
+				"note": "d"
 			},
 			{
-				"dominant": "e"
+				"name": "dominant",
+				"note": "e"
 			},
 			{
-				"submediant": "f",
-				"mod": "sharp"
+				"name": "submediant",
+				"note": "f",
+				"intonation": "sharp"
 			},
 			{
-				"leadingTone": "g",
-				"mod": "sharp"
+				"name": "leadingTone",
+				"note": "g",
+				"intonation": "sharp"
 			}
 		]
 	},
@@ -36,32 +41,39 @@
 		"a": 
 		[
 			{
-				"tonic": "a",
-				"mod": "sharp"
+				"name": "tonic",
+				"note": "a",
+				"intonation": "sharp"
 			},
 			{
-				"supertonic": "b",
-				"mod": "sharp"
+				"name": "supertonic",
+				"note": "b",
+				"intonation": "sharp"
 			},
 			{
-				"mediant": "c",
-				"mod": "doubleSharp"
+				"name": "mediant",
+				"note": "c",
+				"intonation": "doubleSharp"
 			},
 			{
-				"subdominant": "d",
-				"mod": "sharp"
+				"name": "subdominant",
+				"note": "d",
+				"intonation": "sharp"
 			},
 			{
-				"dominant": "e",
-				"mod": "sharp"
+				"name": "dominant",
+				"note": "e",
+				"intonation": "sharp"
 			},
 			{
-				"submediant": "f",
-				"mod": "doubleSharp"
+				"name": "submediant",
+				"note": "f",
+				"intonation": "doubleSharp"
 			},
 			{
-				"leadingTone": "g",
-				"mod": "sharp"
+				"name": "leadingTone",
+				"note": "g",
+				"intonation": "sharp"
 			}
 		]
 	},
@@ -70,29 +82,36 @@
 		"a": 
 		[
 			{
-				"tonic": "a",
-				"mod": "flat"
+				"name": "tonic",
+				"note": "a",
+				"intonation": "flat"
 			},
 			{
-				"supertonic": "b",
-				"mod": "flat"
+				"name": "supertonic",
+				"note": "b",
+				"intonation": "flat"
 			},
 			{
-				"mediant": "c"
+				"name": "mediant",
+				"note": "c"
 			},
 			{
-				"subdominant": "d",
-				"mod": "flat"
+				"name": "subdominant",
+				"note": "d",
+				"intonation": "flat"
 			},
 			{
-				"dominant": "e",
-				"mod": "flat"
+				"name": "dominant",
+				"note": "e",
+				"intonation": "flat"
 			},
 			{
-				"submediant": "f"
+				"name": "submediant",
+				"note": "f"
 			},
 			{
-				"leadingTone": "g"
+				"name": "leadingTone",
+				"note": "g"
 			}
 		]
 	}

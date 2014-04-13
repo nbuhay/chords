@@ -28,20 +28,35 @@ exports.lookup = function (chord, quality, res) {
 	});
 }
 
-exports.scaleLookup = function (type, tonic, res) {
+exports.scaleLookup = function (intonation, tonic, res) {
 	fs.readFile('./major_scale.json', function(err, data) {
 		if(err) {
 			error.emit('err', err);
 		} else {
 			var scale = JSON.parse(data.toString());
-			var body = 	'<h1>'+(scale[type][tonic][0].note)+' Major</h1>' +
-						'<p>'+scale[type][tonic][0].name+': '+scale[type][tonic][0].note+'</p><br>' +
-						'<p>'+scale[type][tonic][1].name+': '+scale[type][tonic][1].note+'</p><br>';
-			console.log(scale[type][tonic]);
+			scale = scale[intonation][tonic];
+			var body = 	'<h1>'+(scale[0].note)+' Major</h1>';
+			for(var i = 0; i < scale.length; i++) {
+				body+='<p>'+scale[i].name+': '+scale[i].note;
+				if(scale[i].intonation) {
+					body+=' '+scale[i].intonation+'</p><br>';
+				} else {
+					body+='</p><br>'
+				}
+			}
 			res.setHeader('Content-Length', Buffer.byteLength(body));
 			res.writeHead(200, {'Content-Type': 'text/html'});
 			res.end(body);
-			return;
 		}
 	});
+	var scale = fs.readFileSync('./major_scale.json');
+	scale = JSON.parse(scale);
+	console.log(scale);
+	console.log(scale[intonation]);
+	return scale;
 }
+
+// exports.calcTriad = function(scale) {
+// 	var triad = {scale[0], scale[2], scale[4]};
+// 	return triad;
+// }

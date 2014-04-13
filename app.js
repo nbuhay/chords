@@ -9,7 +9,7 @@ var root = __dirname;
 var express = require('express');
 var app = express();
 
-var cache = {};              // Object where contents of cached files are stored.
+var scaleCache = [];              // Object where contents of cached files are stored.
 var chord = require('./scripts/controllers/chordController.js');
 var error = require('./scripts/controllers/errorController.js');
 var read = require('./scripts/controllers/readController.js');
@@ -95,7 +95,29 @@ var server = http.createServer(function (req, res) {
 		chord.lookup(triad.chord, triad.quality, res);
 	} else if(url.parse(req.url).pathname == '/scale') {
 		var scale = url.parse(req.url, true).query;
-		chord.scaleLookup(scale.type, scale.tonic, res);
+		var inMem = false;
+		var memLoc;
+		for(var i = 0; i < scaleCache.length; i++) {
+			if(scaleCache[i].quality == scale.quality) { // already have the scale of quality quality in scaleCache
+				console.log("scale.quality: " + scale.quality);
+				inMem = true;
+				memLoc = i;
+				break;
+			}
+		}
+		if(inMem) { // have already read major_scale.json
+			console.log(scaleCache[memLoc].list[scale.intonation][scale.tonic][0].note + " " +
+						scaleCache[memLoc].list[scale.intonation][scale.tonic][0].intonation);
+			console.log(scaleCache[memLoc].list[scale.intonation][scale.tonic][2].note + " " +
+						scaleCache[memLoc].list[scale.intonation][scale.tonic][2].intonation);
+			console.log(scaleCache[memLoc].list[scale.intonation][scale.tonic][4].note + " " +
+						scaleCache[memLoc].list[scale.intonation][scale.tonic][4].intonation);
+			// accesses submediant of major scale -> scaleCache[memLoc].list[scale.intonation][scale.tonic][5].name
+		} else { // must read major_scale.json
+			scaleCache.push({"quality": "major", 
+							 "list": chord.scaleLookup(scale.intonation, scale.tonic, res)});
+		}		
+		console.log(scaleCache);
 	} else {
 		read.load(notFoundPath, res, 404);
 	}
