@@ -95,29 +95,36 @@ var server = http.createServer(function (req, res) {
 		chord.lookup(triad.chord, triad.quality, res);
 	} else if(url.parse(req.url).pathname == '/scale') {
 		var scale = url.parse(req.url, true).query;
-		var inMem = false;
-		var memLoc;
-		for(var i = 0; i < scaleCache.length; i++) {
-			if(scaleCache[i].quality == scale.quality) { // already have the scale of quality quality in scaleCache
-				console.log("scale.quality: " + scale.quality);
-				inMem = true;
-				memLoc = i;
-				break;
+		if(scale.quality == 'undefined' || scale.intonation == 'undefined' || scale.tonic == 'undefined') {
+			fs.readFile(notFoundPath, function(err, html) {
+				if(err) {
+					error.emit('err', err);
+					res.send(500, 'Somebody poisoned the water hole!');
+				} else {
+					console.log('Idiot');
+					res.writeHead(404, {'Content-Type': 'text/html'});
+					error.emit(404, 'Need parameters quality, intonation, and tonic to be defined');
+					res.end(html);
+				}
+			});
+		} else {
+			var inMem = false;
+			var memLoc;
+			for(var i = 0; i < scaleCache.length; i++) {
+				if(scaleCache[i].quality == scale.quality) { // already have the scale of quality quality in scaleCache
+					inMem = true;
+					memLoc = i;
+					break;
+				}
 			}
+			if(inMem) { // have already read major_scale.json
+				chord.scaleToString(scaleCache[memLoc].list[scale.intonation][scale.tonic], res);
+			} else { // must read major_scale.json
+				scaleCache.push({"quality": "major", 
+								 "list": chord.scaleLookupSync(scale.quality, scale.intonation, scale.tonic, res)});
+			}		
+			console.log(scaleCache);
 		}
-		if(inMem) { // have already read major_scale.json
-			console.log(scaleCache[memLoc].list[scale.intonation][scale.tonic][0].note + " " +
-						scaleCache[memLoc].list[scale.intonation][scale.tonic][0].intonation);
-			console.log(scaleCache[memLoc].list[scale.intonation][scale.tonic][2].note + " " +
-						scaleCache[memLoc].list[scale.intonation][scale.tonic][2].intonation);
-			console.log(scaleCache[memLoc].list[scale.intonation][scale.tonic][4].note + " " +
-						scaleCache[memLoc].list[scale.intonation][scale.tonic][4].intonation);
-			// accesses submediant of major scale -> scaleCache[memLoc].list[scale.intonation][scale.tonic][5].name
-		} else { // must read major_scale.json
-			scaleCache.push({"quality": "major", 
-							 "list": chord.scaleLookup(scale.intonation, scale.tonic, res)});
-		}		
-		console.log(scaleCache);
 	} else {
 		read.load(notFoundPath, res, 404);
 	}

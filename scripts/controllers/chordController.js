@@ -28,33 +28,31 @@ exports.lookup = function (chord, quality, res) {
 	});
 }
 
-exports.scaleLookup = function (intonation, tonic, res) {
-	fs.readFile('./major_scale.json', function(err, data) {
-		if(err) {
-			error.emit('err', err);
-		} else {
-			var scale = JSON.parse(data.toString());
-			scale = scale[intonation][tonic];
-			var body = 	'<h1>'+(scale[0].note)+' Major</h1>';
-			for(var i = 0; i < scale.length; i++) {
-				body+='<p>'+scale[i].name+': '+scale[i].note;
-				if(scale[i].intonation) {
-					body+=' '+scale[i].intonation+'</p><br>';
-				} else {
-					body+='</p><br>'
-				}
-			}
-			res.setHeader('Content-Length', Buffer.byteLength(body));
-			res.writeHead(200, {'Content-Type': 'text/html'});
-			res.end(body);
-		}
-	});
+exports.scaleLookupSync = function (quality, intonation, tonic, res) {
+	console.log("quality value : " + quality);
+	var scalePath = "./"+quality+"_scale.json";
+	// console.log(scalePath); Will need to check and make sure no error on scale path
 	var scale = fs.readFileSync('./major_scale.json');
 	scale = JSON.parse(scale);
 	console.log(scale);
 	console.log(scale[intonation]);
 	return scale;
 }
+
+exports.scaleToString = function (scale, res) {
+	var body = 	'<h1>'+(scale[0].note)+' Major</h1>';
+	for(var i = 0; i < scale.length; i++) {
+		body+='<p>'+scale[i].name+': '+scale[i].note;
+		if(scale[i].intonation) {
+			body+=' '+scale[i].intonation+'</p><br>';
+		} else {
+			body+='</p><br>'
+		}
+	}
+	res.setHeader('Content-Length', Buffer.byteLength(body));
+	res.writeHead(200, {'Content-Type': 'text/html'});
+	res.end(body);
+} 
 
 // exports.calcTriad = function(scale) {
 // 	var triad = {scale[0], scale[2], scale[4]};
