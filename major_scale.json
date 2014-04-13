@@ -34,6 +34,42 @@
 				"note": "g",
 				"intonation": "sharp"
 			}
+		],
+		"b":
+		[
+			{
+				"name": "tonic",
+				"note": "b"
+			},
+			{
+				"name": "supertonic",
+				"note": "c",
+				"intonation": "sharp"
+			},
+			{
+				"name": "mediant",
+				"note": "d",
+				"intonation": "sharp"
+			},
+			{
+				"name": "subdominant",
+				"note": "e"
+			},
+			{
+				"name": "dominant",
+				"note": "f",
+				"intonation": "sharp"
+			},
+			{
+				"name": "submediant",
+				"note": "g",
+				"intonation": "sharp"
+			},
+			{
+				"name": "leadingTone",
+				"note": "a",
+				"intonation": "sharp"
+			}
 		]
 	},
 	"sharp": 

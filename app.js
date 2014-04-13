@@ -9,7 +9,6 @@ var root = __dirname;
 var express = require('express');
 var app = express();
 
-var scaleCache = [];              // Object where contents of cached files are stored.
 var chord = require('./scripts/controllers/chordController.js');
 var error = require('./scripts/controllers/errorController.js');
 var read = require('./scripts/controllers/readController.js');
@@ -95,7 +94,7 @@ var server = http.createServer(function (req, res) {
 		chord.lookup(triad.chord, triad.quality, res);
 	} else if(url.parse(req.url).pathname == '/scale') {
 		var scale = url.parse(req.url, true).query;
-		if(scale.quality == 'undefined' || scale.intonation == 'undefined' || scale.tonic == 'undefined') {
+		if(scale.quality == null || scale.intonation == null || scale.tonic == null) {
 			fs.readFile(notFoundPath, function(err, html) {
 				if(err) {
 					error.emit('err', err);
@@ -108,22 +107,7 @@ var server = http.createServer(function (req, res) {
 				}
 			});
 		} else {
-			var inMem = false;
-			var memLoc;
-			for(var i = 0; i < scaleCache.length; i++) {
-				if(scaleCache[i].quality == scale.quality) { // already have the scale of quality quality in scaleCache
-					inMem = true;
-					memLoc = i;
-					break;
-				}
-			}
-			if(inMem) { // have already read major_scale.json
-				chord.scaleToString(scaleCache[memLoc].list[scale.intonation][scale.tonic], res);
-			} else { // must read major_scale.json
-				scaleCache.push({"quality": "major", 
-								 "list": chord.scaleLookupSync(scale.quality, scale.intonation, scale.tonic, res)});
-			}		
-			console.log(scaleCache);
+			chord.scaleLookup(scale.quality, scale.intonation, scale.tonic, res);
 		}
 	} else {
 		read.load(notFoundPath, res, 404);

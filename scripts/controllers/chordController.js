@@ -1,6 +1,8 @@
 var error = require('./errorController.js');
 var fs = require('fs');
 
+var notFoundPath = './public/404.html';
+
 // find notes of chord of certain quality i.e. maj or min
 exports.lookup = function (chord, quality, res) {
 	fs.readFile('./chord_list.json', function(err, data) {
@@ -28,31 +30,41 @@ exports.lookup = function (chord, quality, res) {
 	});
 }
 
-exports.scaleLookupSync = function (quality, intonation, tonic, res) {
+exports.scaleLookup = function (quality, intonation, tonic, res) {
 	console.log("quality value : " + quality);
 	var scalePath = "./"+quality+"_scale.json";
 	// console.log(scalePath); Will need to check and make sure no error on scale path
-	var scale = fs.readFileSync('./major_scale.json');
-	scale = JSON.parse(scale);
-	console.log(scale);
-	console.log(scale[intonation]);
-	return scale;
-}
-
-exports.scaleToString = function (scale, res) {
-	var body = 	'<h1>'+(scale[0].note)+' Major</h1>';
-	for(var i = 0; i < scale.length; i++) {
-		body+='<p>'+scale[i].name+': '+scale[i].note;
-		if(scale[i].intonation) {
-			body+=' '+scale[i].intonation+'</p><br>';
+	fs.readFile(scalePath, function(err, data) {
+		if(err) {
+			fs.readFile(notFoundPath, function(err, html) {
+				if(err) {
+					error.emit('err', err);
+					res.send(500, 'Somebody poisoned the water hole!');
+				} else {
+					console.log('Idiot');
+					res.writeHead(404, {'Content-Type': 'text/html'});
+					error.emit(404, 'Scale data not found');
+					res.end(html);
+				}
+			});
 		} else {
-			body+='</p><br>'
+			var scale = JSON.parse(data);
+			scale = scale[intonation][tonic];
+			var body = 	'<h1>'+(scale[0].note)+' Major</h1>';
+			for(var i = 0; i < scale.length; i++) {
+				body+='<p>'+scale[i].name+': '+scale[i].note;
+				if(scale[i].intonation) {
+					body+=' '+scale[i].intonation+'</p><br>';
+				} else {
+					body+='</p><br>'
+				}
+			}
+			res.setHeader('Content-Length', Buffer.byteLength(body));
+			res.writeHead(200, {'Content-Type': 'text/html'});
+			res.end(body);
 		}
-	}
-	res.setHeader('Content-Length', Buffer.byteLength(body));
-	res.writeHead(200, {'Content-Type': 'text/html'});
-	res.end(body);
-} 
+	});
+}
 
 // exports.calcTriad = function(scale) {
 // 	var triad = {scale[0], scale[2], scale[4]};
