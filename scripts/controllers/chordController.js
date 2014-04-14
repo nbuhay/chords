@@ -73,12 +73,54 @@ exports.scaleLookup = function (quality, intonation, tonic, res) {
 						scale = scale['flat'][dorTonic];
 					}
 					break;
+				case 'phrygian':
+					var phryTonic;
+					if(noteList.indexOf(tonic == 0) {
+						phryTonic = noteList[5];
+					} else if(noteList.indexOf(tonic == 1) {
+						phryTonic = noteList[6];
+					} else {
+						phryTonic = noteList(noteList.indexOf(tonic)-2);
+					}
+
+					if (scale['natural'][phryTonic][2].note == tonic &&
+						scale['natural'][phryTonic][2].intonation == intonation) {
+						scale = scale['natural'][dorTonic];
+					}
+					 else if (scale['sharp'][phryTonic][2].name == tonic &&
+						scale['sharp'][phryTonic][2].intonation == intonation) {
+						scale = scale['sharp'][phryTonic];
+					} else {
+						scale = scale['flat'][phryTonic];
+					}
+					break;
+				case 'lydian':
+					var lydTonic;
+					if(noteList.indexOf(tonic == 0) {
+						lydTonic = noteList[4];
+					} else if(noteList.indexOf(tonic == 1) {
+						lydTonic = noteList[5];
+					} else if (noteList.indexOf(tonic == 2) {
+						lydTonic = noteList[6];
+					} else {
+						lydTonic = noteList(noteList.indexOf(tonic)-3);
+					}
+
+					if (scale['natural'][lydTonic][3].note == tonic &&
+						scale['natural'][lydTonic][3].intonation == intonation) {
+						scale = scale['natural'][lydTonic];
+					}
+					 else if (scale['sharp'][lydTonic][3].name == tonic &&
+						scale['sharp'][lydTonic][3].intonation == intonation) {
+						scale = scale['sharp'][lydTonic];
+					} else {
+						scale = scale['flat'][lydTonic];
+					}
+					break;
 				default:
 					scale = scale[intonation][tonic];
 			}
 
-			console.log(tonic);
-			console.log(scale[0].note != tonic);
 			while(scale[0].note != tonic) {
 				scale.push(scale.shift());
 			}
@@ -87,7 +129,6 @@ exports.scaleLookup = function (quality, intonation, tonic, res) {
 				scale[i].name = nameList[i];
 			}
 
-			console.log(scale);
 			var body = 	'<h1>'+tonic+' '+quality+'</h1>';
 			for(var i = 0; i < scale.length; i++) {
 				body+='<p>'+scale[i].name+': '+scale[i].note;
