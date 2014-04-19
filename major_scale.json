@@ -77,6 +77,158 @@
 				"intonation": "sharp"
 			}
 		],
+		"c":
+		[
+			{
+				"name": "tonic",
+				"note": "c",
+				"intonation": "natural"
+			},
+			{
+				"name": "supertonic",
+				"note": "d",
+				"intonation": "natural"
+			},
+			{
+				"name": "mediant",
+				"note": "e",
+				"intonation": "natural"
+			},
+			{
+				"name": "subdominant",
+				"note": "f",
+				"intonation": "natural"
+			},
+			{
+				"name": "dominant",
+				"note": "g",
+				"intonation": "natural"
+			},
+			{
+				"name": "submediant",
+				"note": "a",
+				"intonation": "natural"
+			},
+			{
+				"name": "leadingTone",
+				"note": "b",
+				"intonation": "natural"
+			}
+		],
+		"d":
+		[
+			{
+				"name": "tonic",
+				"note": "d",
+				"intonation": "natural"
+			},
+			{
+				"name": "supertonic",
+				"note": "e",
+				"intonation": "natural"
+			},
+			{
+				"name": "mediant",
+				"note": "f",
+				"intonation": "sharp"
+			},
+			{
+				"name": "subdominant",
+				"note": "g",
+				"intonation": "natural"
+			},
+			{
+				"name": "dominant",
+				"note": "a",
+				"intonation": "natural"
+			},
+			{
+				"name": "submediant",
+				"note": "b",
+				"intonation": "natural"
+			},
+			{
+				"name": "leadingTone",
+				"note": "b",
+				"intonation": "sharp"
+			}
+		],
+		"e":
+		[
+			{
+				"name": "tonic",
+				"note": "e",
+				"intonation": "natural"
+			},
+			{
+				"name": "supertonic",
+				"note": "f",
+				"intonation": "sharp"
+			},
+			{
+				"name": "mediant",
+				"note": "g",
+				"intonation": "sharp"
+			},
+			{
+				"name": "subdominant",
+				"note": "a",
+				"intonation": "natural"
+			},
+			{
+				"name": "dominant",
+				"note": "b",
+				"intonation": "natural"
+			},
+			{
+				"name": "submediant",
+				"note": "c",
+				"intonation": "sharp"
+			},
+			{
+				"name": "leadingTone",
+				"note": "d",
+				"intonation": "sharp"
+			}
+		],
+		"f":
+		[
+			{
+				"name": "tonic",
+				"note": "f",
+				"intonation": "natural"
+			},
+			{
+				"name": "supertonic",
+				"note": "g",
+				"intonation": "natural"
+			},
+			{
+				"name": "mediant",
+				"note": "a",
+				"intonation": "natural"
+			},
+			{
+				"name": "subdominant",
+				"note": "b",
+				"intonation": "flat"
+			},
+			{
+				"name": "dominant",
+				"note": "c",
+				"intonation": "natural"
+			},
+			{
+				"name": "submediant",
+				"note": "d",
+				"intonation": "natural"
+			},
+			{
+				"name": "leadingTone",
+				"note": "e",
+				"intonation": "natural"
+			}
+		],
 		"g": 
 		[
 			{
