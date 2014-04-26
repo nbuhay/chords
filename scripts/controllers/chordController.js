@@ -53,9 +53,13 @@ exports.scaleLookup = function (quality, intonation, tonic, res) {
 			});
 		} else {
 			var scale = JSON.parse(data);
+			// find tonic of major scale where the second degree
+			// of the major scale is equal to passed tonic
 			switch(quality) {
 				case 'dorian':
 					var dorTonic;
+					// if the passed second degree is A, then theory tells
+					// that the tonic will be G (the last element of noteList)
 					if(noteList.indexOf(tonic) == 0) {
 						dorTonic = noteList[6];
 					} else {
@@ -117,6 +121,30 @@ exports.scaleLookup = function (quality, intonation, tonic, res) {
 						scale = scale['flat'][lydTonic];
 					}
 					break;
+				case 'mixolydian':
+					var mixTonic;
+					if(noteList.indexOf(tonic == 0)) {
+						mixTonic = noteList[3];
+					} else if(noteList.indexOf(tonic == 1)) {
+						mixTonic = noteList[4];
+					} else if(noteList.indexOf(tonic == 2)) {
+						mixTonic = noteList[5];
+					} else if(noteList.indexOf(tonic == 3)) {
+						mixTonic = noteList[6];
+					} else {
+						mixTonic = noteList(noteList.indexOf(tonic)-4);
+					}
+
+					if (scale['natural'][lydTonic][4].note == tonic &&
+						scale['natural'][lydTonic][4].intonation == intonation) {
+						scale = scale['natural'][lydTonic];
+					}
+					 else if (scale['sharp'][lydTonic][4].name == tonic &&
+						scale['sharp'][lydTonic][4].intonation == intonation) {
+						scale = scale['sharp'][lydTonic];
+					} else {
+						scale = scale['flat'][lydTonic];
+					}
 				default:
 					scale = scale[intonation][tonic];
 			}
