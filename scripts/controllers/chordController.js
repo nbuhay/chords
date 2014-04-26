@@ -2,8 +2,8 @@ var error = require('./errorController.js');
 var fs = require('fs');
 var nimble = require('nimble');
 var noteList = ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
-var nameList = ['tonic', 'supertonic', 'mediant', 'subdominant',
-'dominant', 'supermediant', 'leadingTone'];
+var nameList = ['tonic', 'supertonic', 'mediant', 'subdominant', 'dominant', 'supermediant', 'leadingTone'];
+var modeList = ['ionian', 'dorian', 'phrygian', 'lydian', 'mixolydian', 'aeolian', 'locrian'];
 
 var notFoundPath = './public/404.html';
 
@@ -65,56 +65,36 @@ exports.scaleLookup = function (quality, intonation, tonic, res) {
 			var scale = JSON.parse(data);
 			var modeTonic;
 			var modeDegree;  // based off array indexing i.e. dorian is second mode thus modeDegree is 2
-			
-			// find tonic of major scale where the second degree
-			// of the major scale is equal to passed tonic
-			switch(quality) {
-				case 'dorian':
-					// if the passed second degree is A, then theory tells
-					// that the tonic will be G (the last element of noteList)
-					modeDegree = 1;
-					break;
-				case 'phrygian':
-					modeDegree = 2;
-					break;
-				case 'lydian':
-					modeDegree = 3;
-					break;
-				case 'mixolydian':
-					modeDegree = 4;
-					break;
-				case 'aeolian':
-					modeDegree = 6;
-					break;
-				case 'locrian':
-					modeDegree = 7;
-				default:
-					// NEED DEFAULT
-			}
-	
-			modeTonic = findCorrectModeTonic(tonic, modeDegree);
 
-			console.log("modeTonic: " + modeTonic);
-			console.log("modeDegree: "  + modeDegree);
-
-			if (scale['natural'][modeTonic][modeDegree].note == tonic &&
-				scale['natural'][modeTonic][modeDegree].intonation == intonation) {
-					scale = scale['natural'][modeTonic];
-			} else if (scale['sharp'][modeTonic][modeDegree].name == tonic &&
-				scale['sharp'][modeTonic][modeDegree].intonation == intonation) {
-					scale = scale['sharp'][modeTonic];
+			if(quality == 'ionian') {
+				scale = scale[intonation][tonic];
 			} else {
-				scale = scale['flat'][modeTonic];
-			}
+				modeDegree = modeList.indexOf(quality);
+		
+				modeTonic = findCorrectModeTonic(tonic, modeDegree);
 
-			// append incorrect tonic from correct major scale to end
-			while(scale[0].note != tonic) {
-				scale.push(scale.shift());
-			}
+				console.log("modeTonic: " + modeTonic);
+				console.log("modeDegree: "  + modeDegree);
 
-			// map correct names to the scale
-			for(var i = 0; i < scale.length; i++) {
-				scale[i].name = nameList[i];
+				if (scale['natural'][modeTonic][modeDegree].note == tonic &&
+					scale['natural'][modeTonic][modeDegree].intonation == intonation) {
+						scale = scale['natural'][modeTonic];
+				} else if (scale['sharp'][modeTonic][modeDegree].name == tonic &&
+					scale['sharp'][modeTonic][modeDegree].intonation == intonation) {
+						scale = scale['sharp'][modeTonic];
+				} else {
+					scale = scale['flat'][modeTonic];
+				}
+
+				// append incorrect tonic from correct major scale to end
+				while(scale[0].note != tonic) {
+					scale.push(scale.shift());
+				}
+
+				// map correct names to the scale
+				for(var i = 0; i < scale.length; i++) {
+					scale[i].name = nameList[i];
+				}
 			}
 
 			// Setup the model

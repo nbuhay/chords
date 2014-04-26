@@ -459,6 +459,82 @@
 				"note": "d",
 				"intonation": "doubleSharp"
 			}
+		],
+		"f": 
+		[
+			{
+				"name": "tonic",
+				"note": "f",
+				"intonation": "sharp"
+			},
+			{
+				"name": "supertonic",
+				"note": "g",
+				"intonation": "sharp"
+			},
+			{
+				"name": "mediant",
+				"note": "a",
+				"intonation": "sharp"
+			},
+			{
+				"name": "subdominant",
+				"note": "b",
+				"intonation": "natural"
+			},
+			{
+				"name": "dominant",
+				"note": "c",
+				"intonation": "sharp"
+			},
+			{
+				"name": "submediant",
+				"note": "d",
+				"intonation": "sharp"
+			},
+			{
+				"name": "leadingTone",
+				"note": "e",
+				"intonation": "sharp"
+			}
+		],
+		"g": 
+		[
+			{
+				"name": "tonic",
+				"note": "g",
+				"intonation": "sharp"
+			},
+			{
+				"name": "supertonic",
+				"note": "a",
+				"intonation": "sharp"
+			},
+			{
+				"name": "mediant",
+				"note": "b",
+				"intonation": "sharp"
+			},
+			{
+				"name": "subdominant",
+				"note": "c",
+				"intonation": "sharp"
+			},
+			{
+				"name": "dominant",
+				"note": "d",
+				"intonation": "sharp"
+			},
+			{
+				"name": "submediant",
+				"note": "e",
+				"intonation": "sharp"
+			},
+			{
+				"name": "leadingTone",
+				"note": "f",
+				"intonation": "doubleSharp"
+			}
 		]
 	},
 	"flat": 
