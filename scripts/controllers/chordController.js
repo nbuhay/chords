@@ -70,11 +70,7 @@ exports.scaleLookup = function (quality, intonation, tonic, res) {
 				scale = scale[intonation][tonic];
 			} else {
 				modeDegree = modeList.indexOf(quality);
-		
 				modeTonic = findCorrectModeTonic(tonic, modeDegree);
-
-				console.log("modeTonic: " + modeTonic);
-				console.log("modeDegree: "  + modeDegree);
 
 				if (scale['natural'][modeTonic][modeDegree].note == tonic &&
 					scale['natural'][modeTonic][modeDegree].intonation == intonation) {
@@ -107,6 +103,7 @@ exports.scaleLookup = function (quality, intonation, tonic, res) {
 					body+='</p><br>'
 				}
 			}
+			
 			// return model
 			res.setHeader('Content-Length', Buffer.byteLength(body));
 			res.writeHead(200, {'Content-Type': 'text/html'});
