@@ -22,4 +22,4 @@ module.exports.on('chord404', function(chord, quality, res) {
 
 module.exports.on('500', function(err) {
 	console.log('500 Error: ' + err);
-})
+});

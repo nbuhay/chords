@@ -1,14 +1,23 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="en-US" ng-app="chordsApp">
 	<head>
+		<meta charset="utf-8">
 		<title>Chords, eazy!</title>
 	</head>
-	<body>
+	<body ng-controller="ScaleDisplayCtrl">
 		<div class="col-md-4 col-xs-12">
 			<h1>Hello, theorist!</h1>
 		</div>
 		<div class="col-md-8 col-xs-12" style="background-color: #FF7B40;">
 			Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fuga, impedit, fugiat, eligendi minus nobis eos obcaecati ex nam sed commodi quas accusantium id perspiciatis sint odit error animi veniam omnis.
 		</div>
+		<div ng-repeat="note in scale">
+			<p>Name: {{note.name}}</p>
+			<p>Note: {{note.note}}</p>
+			<p>Intonation: {{note.intonation}}</p>
+			<br>
+		</div>
+	<script src="/bower_components/angular/angular.min.js"></script>
+	<script src="/scripts/controllers/angularScaleController.js"></script>
 	</body>
 </html>

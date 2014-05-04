@@ -103,7 +103,7 @@ exports.scaleLookup = function (quality, intonation, tonic, res) {
 					body+='</p><br>'
 				}
 			}
-			
+
 			// return model
 			res.setHeader('Content-Length', Buffer.byteLength(body));
 			res.writeHead(200, {'Content-Type': 'text/html'});

@@ -1,11 +1,12 @@
 {
 	"name": "chords",
 	"version": "0.0.1",
-	"description": "learning chords made easy",
+	"description": "Learning chords made easy",
 	"main": "app.js",
 
 	"dependencies": {
 		"mime": "~1.2.7",
-		"nimble": "0.0.x"
+		"nimble": "0.0.x",
+		"bower": "^1.3.1"
 	}
 }

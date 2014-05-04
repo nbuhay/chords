@@ -3,99 +3,49 @@ var fs = require('fs');      // Provides access to file system related funct
 var path = require('path');  // Provides fs path type funct
 var mime = require('mime');  // provides ability to derive MIME types based on file ext
 var url = require('url');
-var root = __dirname;
 
 // Express creates its own independent instance of http.createServer, neat!
-var express = require('express');
-var app = express();
 
 var chord = require('./scripts/controllers/chordController.js');
 var error = require('./scripts/controllers/errorController.js');
-var read = require('./scripts/controllers/readController.js');
-var indexPath = './public/index.html';
+var reader = require('./scripts/controllers/readController.js');
+var indexPath = './index.html';
 var notFoundPath = './public/404.html';
 var port = 1200;
 var weight = 3;
 
-// function serveStatic (response, cache, absPath) {
-// 	// If the path for file to be sent already was in cache, use that path
-// 	if (cache[absPath]) {
-// 		sendFile(response, absPath, cache[absPath]);
-// 	// Otherwise must do a lot of work
-// 	} else {
-// 		// Use fs functionality to check if the path arg exists
-// 		fs.exists(absPath, function(exists) {
-// 			// use the results of the fs.exists (stored in param exists) to do logic
-// 			if(exists) {
-// 				// it exists and must be read in
-// 				fs.readFile(absPath, function(err, data) {
-// 					// should be noted the callback param data is the data read from path
-// 					if(err) {
-// 						send404(response);
-// 					} else {
-// 						// no error, store path as array index and data
-// 						cache[absPath] = data;
-// 						sendFile(response, absPath, data);
-// 					}
-// 				});
-// 			} else {
-// 				send404(response);
-// 			}
-// 		});
-// 	}
-// }
-
 function serveStatic(url, res) {
-	fs.exists(url, function(exists) {
-		if(exists) {
-			fs.readFile(url, function(err, html) {
-				if(err) {
-					error.emit('err', err);
-					res.send(500, 'Somebody poisoned the water hole!');
-				} else {
-					res.send(html);
-				}
-			});
-		} else {
-			fs.readFile(notFoundPath, function(err, html) {
-				if(err) {
-					error.emit('err', err);
-					res.send(500, 'Somebody poisoned the water hole!');
-				} else {
-					error.emit('404', err);
-					res.send(404, html);
-					// res.writeHead(404, {'Content-Type': 'text/html'});
-					// res.end(html);
-				}
-			});
-		}
-	});
+	reader.load(url, res);
 }
-
-app.use(express.static(__dirname + '/public'));
-
-app.use('/', express.static(__dirname + '/public'));
-
-// app.get('/', function(req, res) {
-// 		serveStatic(indexPath, res);
-// 	});
-
-app.listen(5000, function() {
-	console.log('Express app listening on port 5000...');
-});
 
 var server = http.createServer(function (req, res) {
 	
-	if(req.url == '/') {
-		serveStatic(indexPath, res);
-	} else if(url.parse(req.url).pathname == '/triad') {
+	var filePath = '.' + req.url;
+
+	if(filePath == './') {
+		filePath += 'public/index.html';
+	}
+
+	// must check the file type being served
+	var extname = path.extname(filePath);
+	var contentType = 'text/html';
+	switch (extname) {
+		case '.js':
+			contentType = 'text/javascript';
+			break;
+		case '.css':
+			contentType = 'text/css';
+			break;
+	}
+	
+	if(url.parse(req.url).pathname == '/triad') {
 		// when parsing pass true to parse the query as well
 		var triad = url.parse(req.url, true).query;
 		chord.lookup(triad.chord, triad.quality, res);
 	} else if(url.parse(req.url).pathname == '/scale') {
 		var scale = url.parse(req.url, true).query;
-		if(scale.quality == null || scale.intonation == null || scale.tonic == null) {
-			fs.readFile(notFoundPath, function(err, html) {
+		if(scale.quality == null || scale.intonation == null || scale.tonic == fs) {
+			null.readFile(notFoundPath, function(err, html) {
 				if(err) {
 					error.emit('err', err);
 					res.send(500, 'Somebody poisoned the water hole!');
@@ -109,9 +59,28 @@ var server = http.createServer(function (req, res) {
 		} else {
 			chord.scaleLookup(scale.quality, scale.intonation, scale.tonic, res);
 		}
-	} else {
-		read.load(notFoundPath, res, 404);
 	}
+
+	// stat returns an object which has viewable parameters
+	fs.stat(filePath, function(err, stat) {
+		if(err) {
+			if(err.code == 'ENOENT') {
+				error.emit(404, err);
+				res.end('Not Found');
+			} else {
+				error.emit(500, err);
+				res.end('Internal Server Error');	
+			}
+		} else {
+			// use stat to set size
+			res.setHeader('Content-Length', stat.size);
+			res.setHeader('Content-Type', contentType);
+		}
+		console.log(filePath);
+		console.log(contentType);
+		console.log(stat.size);
+		serveStatic(filePath, res);
+	});
 
 }).listen(port, function() {
 	console.log('Listening on port ' + port + '...');
